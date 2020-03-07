@@ -1,0 +1,140 @@
+<!doctype html>
+<!--
+Created using JS Bin
+http://bin.webduino.io
+
+Copyright (c) 2020 by anonymous (http://bin.webduino.io/rudom/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Webduino Blockly App</title>
+  <script src="https://blocklypro.webduino.io/node_modules/jquery/dist/jquery.min.js?rev=2f6b11a7e914718e0290410e85366fe9"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/webduino-all-0.4.20.min.js?rev=4426739c00d85325cb2d3d701fa50666"></script>
+  <script src="https://blocklypro.webduino.io/dist/webduino-blockly.min.js?rev=ad06da24174defd84a3752446fc7b672"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/firebase.min.js?rev=c0bfd493efd477d098a4ae9e92b13880"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/runtime.min.js?rev=683a69503433786202911b4d9f766100"></script>
+</head>
+
+<body>
+  <div></div>
+<script id="jsbin-javascript">
+var myFirebase;
+var val;
+
+function get_time(t) {
+  var varTime = new Date(),
+    varHours = varTime.getHours(),
+    varMinutes = varTime.getMinutes(),
+    varSeconds = varTime.getSeconds();
+  var varNow;
+  if (t == "hms") {
+    varNow = varHours + ":" + varMinutes + ":" + varSeconds;
+  } else if (t == "h") {
+    varNow = varHours;
+  } else if (t == "m") {
+    varNow = varMinutes;
+  } else if (t == "s") {
+    varNow = varSeconds;
+  }
+  return varNow;
+}
+
+
+myFirebase = new Firebase('https://factory-coding101.firebaseio.com/chatbot/agv1');
+myFirebase.push({
+  name: 'AGV1',
+  userid: 'AGV',
+  time: get_time("hms"),
+  content: '我上線囉！'
+});
+
+myFirebase.limitToLast(1).on('child_added', function (snapshot) {
+  val = snapshot.val().text;
+  if (val.indexOf('啟動')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV start'
+    });
+  } else if (val.indexOf('停止')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV stop'
+    });
+  } else if (val.indexOf('回家')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV go home'
+    });
+  }else if (val.indexOf('卸載')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV Complete uninstall'
+    });
+  } else if (val.indexOf('到站A')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station A'
+    });
+  } else if (val.indexOf('到站B')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station B'
+    });
+  } else if (val.indexOf('到站C')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station C'
+    });
+  } else if (val.indexOf('到站D')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station D'
+    });
+  } else if (val.indexOf('到站E')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station E'
+    });
+  } else if (val.indexOf('到站F')!=-1) {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: 'AGV arrived at station F'
+    });
+  } else {
+    myFirebase.push({
+      name: 'AGV1',
+      userid: 'AGV',
+      time: get_time("hms"),
+      content: '我聽不懂你的指令'
+    });
+  }
+});
+
+</script>
+</body>

@@ -1,0 +1,107 @@
+<!doctype html>
+<!--
+Created using JS Bin
+http://bin.webduino.io
+
+Copyright (c) 2020 by anonymous (http://bin.webduino.io/fayod/2/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title> sensor </title>
+  <script src="https://blocklypro.webduino.io/node_modules/jquery/dist/jquery.min.js?rev=2f6b11a7e914718e0290410e85366fe9"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/webduino-all-0.4.20.min.js?rev=4426739c00d85325cb2d3d701fa50666"></script>
+  <script src="https://blocklypro.webduino.io/dist/webduino-blockly.min.js?rev=ad06da24174defd84a3752446fc7b672"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/firebase.min.js?rev=c0bfd493efd477d098a4ae9e92b13880"></script>
+  <script src="https://blocklypro.webduino.io/dist/lib/runtime.min.js?rev=683a69503433786202911b4d9f766100"></script>
+  <script src="https://blocklypro.webduino.io/node_modules/webduino-module-pm25/G3.js"></script>
+  <script src="https://blocklypro.webduino.io/node_modules/webduino-module-pm25/G3-blockly.js"></script>
+  <script src="https://blocklypro.webduino.io/node_modules/webduino-module-dht/Dht.js"></script>
+  <script src="https://blocklypro.webduino.io/node_modules/webduino-module-dht/Dht-blockly.js"></script>
+<style id="jsbin-css">
+#demo-area-01-show { font-size: 60px; pointer-events: auto!important; }
+</style>
+</head>
+
+<body>
+  <div><span id="demo-area-01-show">123</span></div>
+<script id="jsbin-javascript">
+var g3;
+var photocell;
+var dht;
+var myFirebase;
+var Firebase_g3;
+var ph;
+var t;
+var h;
+
+function get_time(t) {
+  var varTime = new Date(),
+    varHours = varTime.getHours(),
+    varMinutes = varTime.getMinutes(),
+    varSeconds = varTime.getSeconds();
+  var varNow;
+  if (t == "hms") {
+    varNow = varHours + ":" + varMinutes + ":" + varSeconds;
+  } else if (t == "h") {
+    varNow = varHours;
+  } else if (t == "m") {
+    varNow = varMinutes;
+  } else if (t == "s") {
+    varNow = varSeconds;
+  }
+  return varNow;
+}
+
+
+boardReady({board: 'Smart', device: 'YWJre', transport: 'mqtt'}, function (board) {
+  board.samplingInterval = 60000;
+  g3 = getG3(board, 5, 3);
+  myFirebase = new Firebase('https://factory-coding101.firebaseio.com/sensor/g3_25');
+  Firebase_g3 = new Firebase('https://factory-coding101.firebaseio.com/sensor/g3_10');
+  g3.read(function (val) {
+    myFirebase.push({
+      time: get_time("hms"),
+      date: g3.pm25
+    });
+    Firebase_g3.push({
+      time: get_time("hms"),
+      date: g3.pm10
+    });
+  }, 1000);
+});
+
+boardReady({board: 'Smart', device: '10QmJkkd', transport: 'mqtt'}, function (board) {
+  board.samplingInterval = 60000;
+  photocell = getPhotocell(board, 0);
+  dht = getDht(board, 14);
+  ph = new Firebase('https://factory-coding101.firebaseio.com/sensor/photoresistance');
+  t = new Firebase('https://factory-coding101.firebaseio.com/sensor/temperature');
+  h = new Firebase('https://factory-coding101.firebaseio.com/sensor/humidity');
+  dht.trigger(true,2,-1);
+  photocell.measure(function (val) {
+    photocell.detectedVal = val;
+    ph.push({
+      time: get_time("hms"),
+      date: photocell.detectedVal
+    });
+  });
+  dht.read(function(evt){
+    h.push({
+      time: get_time("hms"),
+      date: dht.humidity
+    });
+    t.push({
+      time: get_time("hms"),
+      date: dht.temperature
+    });
+  });
+});
+
+</script>
+</body>
