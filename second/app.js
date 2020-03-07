@@ -6,10 +6,10 @@ $(function(){
       $show = $('#show'),
       ms = new Date().getTime();
   var config = {
-    databaseURL: "https://coding101-2c8e8.firebaseio.com/"
+    databaseURL: "https://factory-coding101.firebaseio.com/"
   };
   firebase.initializeApp(config);
-  var database = firebase.database().ref("chatbot/AGV2");
+  var database = firebase.database().ref("chatbot/agv2");
 
   $btn.on('click', write);
   $content.on('keydown', function(e){
