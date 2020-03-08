@@ -60,10 +60,10 @@ function get_time(t) {
 
 
 boardReady({board: 'Smart', device: 'YWJre', transport: 'mqtt'}, function (board) {
-  board.samplingInterval = 60000;
+  board.samplingInterval = 6000;
   g3 = getG3(board, 5, 3);
-  myFirebase = new Firebase('https://factory-coding101.firebaseio.com/sensor/g3_25');
-  Firebase_g3 = new Firebase('https://factory-coding101.firebaseio.com/sensor/g3_10');
+  myFirebase = new Firebase('https://coding101-2c8e8.firebaseio.com/sensor/g3_25');
+  Firebase_g3 = new Firebase('https://coding101-2c8e8.firebaseio.com/sensor/g3_10');
   g3.read(function (val) {
     myFirebase.push({
       time: get_time("hms"),
@@ -77,12 +77,12 @@ boardReady({board: 'Smart', device: 'YWJre', transport: 'mqtt'}, function (board
 });
 
 boardReady({board: 'Smart', device: '10QmJkkd', transport: 'mqtt'}, function (board) {
-  board.samplingInterval = 60000;
+  board.samplingInterval = 6000;
   photocell = getPhotocell(board, 0);
   dht = getDht(board, 14);
-  ph = new Firebase('https://factory-coding101.firebaseio.com/sensor/photoresistance');
-  t = new Firebase('https://factory-coding101.firebaseio.com/sensor/temperature');
-  h = new Firebase('https://factory-coding101.firebaseio.com/sensor/humidity');
+  ph = new Firebase('https://coding101-2c8e8.firebaseio.com/sensor/photoresistance');
+  t = new Firebase('https://coding101-2c8e8.firebaseio.com/sensor/temperature');
+  h = new Firebase('https://coding101-2c8e8.firebaseio.com/sensor/humidity');
   dht.trigger(true,2,-1);
   photocell.measure(function (val) {
     photocell.detectedVal = val;
